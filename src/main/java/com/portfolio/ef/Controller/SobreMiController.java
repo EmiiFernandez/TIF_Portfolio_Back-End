@@ -1,9 +1,9 @@
 package com.portfolio.ef.Controller;
 
-import com.portfolio.ef.Dto.DtoSkills;
-import com.portfolio.ef.Model.Skills;
+import com.portfolio.ef.Dto.DtoSobreMi;
+import com.portfolio.ef.Model.SobreMi;
 import com.portfolio.ef.Security.Controller.Mensaje;
-import com.portfolio.ef.Service.SkillsService;
+import com.portfolio.ef.Service.SobreMiService;
 import java.util.List;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,74 +21,75 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/skills")
+@RequestMapping("/sobremi")
 @CrossOrigin(origins = {"https://front-ef.web.app", "http://localhost:4200"})
-public class SkillsController {
+public class SobreMiController  {
      @Autowired
-    SkillsService skillsService;
+    SobreMiService sobreMiService;
     
     @GetMapping("/lista")
-    public ResponseEntity<List<Skills>> list() {
-        List<Skills> list = skillsService.list();
+    public ResponseEntity<List<SobreMi>> list() {
+        List<SobreMi> list = sobreMiService.list();
         return new ResponseEntity(list, HttpStatus.OK);
     }
 
     @GetMapping("/detail/{id}")
-    public ResponseEntity<Skills> getById(@PathVariable("id") int id) {
-        if (!skillsService.existsById(id)) {
+    public ResponseEntity<SobreMi> getById(@PathVariable("id") int id) {
+        if (!sobreMiService.existsById(id)) {
             return new ResponseEntity(new Mensaje("El ID no existe"), HttpStatus.NOT_FOUND);
         }
         
-        Skills skills = skillsService.getOne(id).get();
-        return new ResponseEntity(skills, HttpStatus.OK);
+        SobreMi sobreMi = sobreMiService.getOne(id).get();
+        return new ResponseEntity(sobreMi, HttpStatus.OK);
     }
     
-        @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<?> delete(@PathVariable("id") int id) {
-        if (!skillsService.existsById(id)) {
+        if (!sobreMiService.existsById(id)) {
             return new ResponseEntity(new Mensaje("El ID no existe"), HttpStatus.NOT_FOUND);
         }
-        skillsService.delete(id);
-        return new ResponseEntity(new Mensaje("Skill eliminada"), HttpStatus.OK);
+        sobreMiService.delete(id);
+        return new ResponseEntity(new Mensaje("Descripición eliminada"), HttpStatus.OK);
     }
-
-        @PreAuthorize("hasRole('ADMIN')")
+    
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/create")
-    public ResponseEntity<?> create(@RequestBody DtoSkills dtoSkills) {
-        if (StringUtils.isBlank(dtoSkills.getNombreS())) {
+    public ResponseEntity<?> create(@RequestBody DtoSobreMi dtoSobreMi) {
+        if (StringUtils.isBlank(dtoSobreMi.getDescripcionSM())) {
             return new ResponseEntity(new Mensaje("El nombre es obligatorio"), HttpStatus.BAD_REQUEST);
         }
-        if (skillsService.existsByNombreS(dtoSkills.getNombreS())) {
+        if (sobreMiService.existsByDescripcionSM(dtoSobreMi.getDescripcionSM())) {
             return new ResponseEntity(new Mensaje("El nombre ya existe"), HttpStatus.BAD_REQUEST);
         }
 
-        Skills skills = new Skills(dtoSkills.getNombreS(), dtoSkills.getPorcentajeS());
-        skillsService.save(skills);
+        SobreMi sobreMi = new SobreMi(dtoSobreMi.getDescripcionSM());
+        sobreMiService.save(sobreMi);
 
         return new ResponseEntity(new Mensaje("Skill creada exitosamente"), HttpStatus.OK);
     }
+    
 
-        @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/update/{id}")
-    public ResponseEntity<?> update(@PathVariable("id") int id, @RequestBody DtoSkills dtoSkills) {
+    public ResponseEntity<?> update(@PathVariable("id") int id, @RequestBody DtoSobreMi dtoSobreMi) {
         //Validamos si existe el ID
-        if (!skillsService.existsById(id)) {
+        if (!sobreMiService.existsById(id)) {
             return new ResponseEntity(new Mensaje("El ID no existe"), HttpStatus.BAD_REQUEST);
         }
          //Compara nombre
-        if (skillsService.existsByNombreS(dtoSkills.getNombreS()) && skillsService.getByNombreS(dtoSkills.getNombreS()).get().getId() != id) {
-            return new ResponseEntity(new Mensaje("La skill ya existe"), HttpStatus.BAD_REQUEST);
+        if (sobreMiService.existsByDescripcionSM(dtoSobreMi.getDescripcionSM()) && sobreMiService.getByDescripcionSM(dtoSobreMi.getDescripcionSM()).get().getId() != id) {
+            return new ResponseEntity(new Mensaje("La descripción ya existe"), HttpStatus.BAD_REQUEST);
         }
         //No puede estar vacio
-        if (StringUtils.isBlank(dtoSkills.getNombreS())) {
-            return new ResponseEntity(new Mensaje("El nombre es obligatorio"), HttpStatus.BAD_REQUEST);
+        if (StringUtils.isBlank(dtoSobreMi.getDescripcionSM())) {
+            return new ResponseEntity(new Mensaje("Es obligatorio"), HttpStatus.BAD_REQUEST);
         }
-        Skills skills = skillsService.getOne(id).get();
-        skills.setNombreS(dtoSkills.getNombreS());
-        skills.setPorcentajeS((dtoSkills.getPorcentajeS()));
+        SobreMi sobreMi = sobreMiService.getOne(id).get();
+        sobreMi.setDescripcionSM(dtoSobreMi.getDescripcionSM());
+    
 
-        skillsService.save(skills);
-        return new ResponseEntity(new Mensaje("Skill Actualizada"), HttpStatus.OK);
+        sobreMiService.save(sobreMi);
+        return new ResponseEntity(new Mensaje("Descripción Actualizada"), HttpStatus.OK);
     }
 }
+

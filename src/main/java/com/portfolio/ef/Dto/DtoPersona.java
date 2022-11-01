@@ -1,46 +1,29 @@
-package com.portfolio.ef.Model;
+package com.portfolio.ef.Dto;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.NotBlank;
 
-@Entity
-public class Persona {
+public class DtoPersona {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
-    @NotNull
+    @NotBlank
     private String nombre;
-    @NotNull
+    @NotBlank
     private String apellido;
-    @NotNull
+    @NotBlank
     private String puesto;
-    @NotNull
+    @NotBlank
     private String descripcion;
+    @NotBlank
     private String img;
 
-    //Constructores
-    public Persona() {
+    public DtoPersona() {
     }
 
-    public Persona(String nombre, String apellido, String puesto, String descripcion, String img) {
+    public DtoPersona(String nombre, String apellido, String puesto, String descripcion, String img) {
         this.nombre = nombre;
         this.apellido = apellido;
         this.puesto = puesto;
         this.descripcion = descripcion;
         this.img = img;
-    }
-
-    //Getters & Setters
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     public String getNombre() {
@@ -66,8 +49,8 @@ public class Persona {
     public void setPuesto(String puesto) {
         this.puesto = puesto;
     }
-    
-    
+
+        
     public String getDescripcion() {
         return descripcion;
     }

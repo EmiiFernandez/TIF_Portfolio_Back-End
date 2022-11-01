@@ -22,8 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/proyecto")
-@CrossOrigin(origins = "http://localhost:4200")
-//@CrossOrigin(origins = "https://frontendef.web.app")
+@CrossOrigin(origins = {"https://front-ef.web.app", "http://localhost:4200"})
 public class ProyectoController {
 
     @Autowired
@@ -44,7 +43,7 @@ public class ProyectoController {
         Proyecto proyecto = proyectoService.getOne(id).get();
         return new ResponseEntity(proyecto, HttpStatus.OK);
     }
-
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<?> delete(@PathVariable("id") int id) {
         if (!proyectoService.existsById(id)) {
